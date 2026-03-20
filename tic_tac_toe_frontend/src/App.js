@@ -48,17 +48,19 @@ function App() {
       }
       if (isGameOver) return;
 
+      // Apply the move and toggle player as one atomic update to prevent
+      // toggling turns on illegal clicks (e.g., clicking an occupied square).
       setBoard((prevBoard) => {
         // Prevent overwriting moves.
         if (prevBoard[index] !== null) return prevBoard;
 
         const nextBoard = prevBoard.slice();
         nextBoard[index] = nextPlayer;
+
+        // Toggle player only when the move is actually committed.
+        setNextPlayer((prev) => (prev === "X" ? "O" : "X"));
         return nextBoard;
       });
-
-      // Toggle player only if the move is legal.
-      setNextPlayer((prev) => (prev === "X" ? "O" : "X"));
     },
     [isGameOver, nextPlayer]
   );
